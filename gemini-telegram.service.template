@@ -1,0 +1,15 @@
+[Unit]
+Description=Gemini Telegram Bridge
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=@WORKING_DIR@
+ExecStart=@PYTHON_PATH@ @WORKING_DIR@/bot.py
+Restart=always
+RestartSec=5
+# We explicitly inject the node binary path in case the user's gemini cli relies on it via `/usr/bin/env node`
+Environment="PATH=@NODE_PATH@:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[Install]
+WantedBy=default.target
