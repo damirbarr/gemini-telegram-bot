@@ -2,7 +2,7 @@
 
 Turn any Linux machine into a fully autonomous, remote-controlled assistant via Telegram using the [Gemini CLI](https://geminicli.com/).
 
-This bridge creates a highly secure, private connection between your personal Telegram account and your machine. It features persistent chat memory, context compaction, multi-chat management, and direct shell access.
+This bridge creates a highly secure, private connection between your personal Telegram account and your machine. It features persistent chat memory, context compaction, multi-chat management.
 
 ## Features
 - **Highly Secure:** Hardcoded to ONLY respond to your specific Telegram User ID. Ignores all other users completely.
@@ -58,7 +58,6 @@ make start
 ## How to use the Bot
 Open Telegram and message your bot!
 - `/chat <msg>` - Talk to Gemini (stateful). Standard text messages also do this.
-- `/sh <cmd>` - Run bash commands on your host machine.
 - `/sessions` - View all active chat histories.
 - `/switch <id>` - Jump between different tasks/chats.
 - `/compact` - Compress your current chat history to save tokens.

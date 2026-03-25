@@ -41,7 +41,6 @@ async def setup_commands(application):
         BotCommand("switch", "Switch to a specific session number"),
         BotCommand("newchat", "Start a completely new session"),
         BotCommand("compact", "Summarize current session to save context"),
-        BotCommand("sh", "Execute a shell command"),
         BotCommand("gemini", "Ask a stateless one-off question"),
         BotCommand("rules", "View persistent rules"),
         BotCommand("addrule", "Add a persistent rule")
@@ -150,24 +149,6 @@ async def gemini_stateless(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(res) > 4000: res = res[:4000] + "\n...[truncated]"
     await update.message.reply_text(f"*{res}*", parse_mode="Markdown")
 
-async def run_shell(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_authorized(update): return
-    cmd = " ".join(context.args)
-    if not cmd:
-        await update.message.reply_text("Usage: `/sh <command>`", parse_mode="Markdown")
-        return
-    await update.message.reply_chat_action("typing")
-    try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
-        output = (result.stdout + result.stderr).strip()
-        if not output: output = "[Success, no output]"
-    except subprocess.TimeoutExpired:
-        output = "❌ Command timed out (60s)"
-    except Exception as e:
-        output = f"❌ Error: {str(e)}"
-    if len(output) > 4000: output = output[:4000] + "\n...[truncated]"
-    await update.message.reply_text(f"```\n{output}\n```", parse_mode="Markdown")
-
 async def compact_context(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_authorized(update): return
     global ACTIVE_SESSION
@@ -204,8 +185,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(BOT_TOKEN).build()
-    
-    application.add_handler(CommandHandler('sh', run_shell))
     application.add_handler(CommandHandler('sessions', list_sessions))
     application.add_handler(CommandHandler('switch', switch_session))
     application.add_handler(CommandHandler('newchat', new_chat))
