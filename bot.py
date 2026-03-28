@@ -65,13 +65,17 @@ def build_gemini_cmd(prompt, use_latest=False):
     cmd_parts.append(f'-p "{escaped_prompt}"')
     return " ".join(cmd_parts)
 
+DATA_DIR = os.path.expanduser("~/.gemini_telegram_bot_data")
+os.makedirs(DATA_DIR, exist_ok=True)
+
 async def execute_gemini(cmd_string):
     try:
         process = await asyncio.create_subprocess_shell(
             cmd_string,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=os.environ.copy()
+            env=os.environ.copy(),
+            cwd=DATA_DIR
         )
         stdout, stderr = await process.communicate()
         output = (stdout.decode() + stderr.decode()).strip()
